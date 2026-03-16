@@ -1,6 +1,7 @@
 name: CHIP wheels build
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
