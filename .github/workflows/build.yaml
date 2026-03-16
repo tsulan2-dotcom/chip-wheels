@@ -97,10 +97,8 @@ jobs:
 
           # Set tag based on base branch (use base branch for the release or pull request)
           if [ "${{ github.event_name }}" == "push" ]; then
-            if git diff --name-only ${{ github.event.before }} HEAD | grep -E '^Dockerfile'; then
-              echo "Dockerfile or related files changed; building container."
-              build_needed=true
-            fi
+            echo "Push event detected; building container."
+            build_needed=true
           elif [ "${{ github.event_name }}" == "pull_request" ]; then
             # For pull_request, use base_ref/head_ref
             if [ "${{ github.event.pull_request.head.repo.fork }}" == "true" ]; then
@@ -234,7 +232,7 @@ jobs:
           python3 -m twine upload out/controller/python/home_assistant_matter_core-${{ needs.build_prepare.outputs.version }}-cp311-abi3-manylinux_2_31_${{ matrix.arch.name }}.whl --skip-existing
           python3 -m twine upload out/controller/python/home_assistant_matter_repl-${{ needs.build_prepare.outputs.version }}-py3-none-any.whl --skip-existing
       - name: Upload wheels to Test PyPI
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ false }}
         env:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.TWINE_TOKEN_TESTPYPI }}
@@ -326,7 +324,7 @@ jobs:
           python3 -m pip install twine build
           python3 -m twine upload out/controller/python/home_assistant_matter_core-${{ needs.build_prepare.outputs.version }}-cp311-abi3-macosx_14_0_${{ matrix.arch.name }}.whl --skip-existing
       - name: Upload wheels to Test PyPI
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ false }}
         env:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.TWINE_TOKEN_TESTPYPI }}
